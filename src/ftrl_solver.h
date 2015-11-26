@@ -142,6 +142,7 @@ bool FtrlSolver<T>::Initialize(
 	return init_;
 }
 
+// initialize from saved model
 template<typename T>
 bool FtrlSolver<T>::Initialize(const char* path) {
 	std::fstream fin;
@@ -156,8 +157,8 @@ bool FtrlSolver<T>::Initialize(const char* path) {
 		return false;
 	}
 
-	n_ = new T[feat_num_];
-	z_ = new T[feat_num_];
+	n_ = new T[feat_num_];  //
+	z_ = new T[feat_num_];  //
 
 	for (size_t i = 0; i < feat_num_; ++i) {
 		fin >> n_[i];
@@ -180,6 +181,7 @@ bool FtrlSolver<T>::Initialize(const char* path) {
 	return init_;
 }
 
+// this step is to update w(t,i) as mentioned in the paper
 template<typename T>
 T FtrlSolver<T>::GetWeight(size_t idx) {
 	T sign = 1.;
@@ -188,10 +190,10 @@ T FtrlSolver<T>::GetWeight(size_t idx) {
 		sign = -1.;
 	}
 
-	if (util_less_equal(sign * z_[idx], l1_)) {
+	if (util_less_equal(sign * z_[idx], l1_)) {  // l1_ is lamda1
 		val = 0.;
 	} else {
-		val = (sign * l1_ - z_[idx]) / ((beta_ + sqrt(n_[idx])) / alpha_ + l2_);
+		val = (sign * l1_ - z_[idx]) / ((beta_ + sqrt(n_[idx])) / alpha_ + l2_);  // l2_ is lamda2
 	}
 
 	return val;
